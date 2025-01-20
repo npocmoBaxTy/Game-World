@@ -1,0 +1,57 @@
+@media screen and (max-width: 600px) {
+  .main--wrapper__sidebar.show {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    transition: 0.5s;
+  }
+  .main--wrapper__sidebar-content {
+    width: 70%;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    background-color: white;
+    overflow-y: auto;
+    z-index: 100;
+    transition: 0.5s;
+  }
+  .main--wrapper__sidebar.hide {
+    position: fixed;
+    z-index: 100;
+    left: -100%;
+    top: 0;
+    width: 50%;
+    transition: 0.5s;
+  }
+}
+
+@media (max-width: 1024px) {
+  .main--wrapper__sidebar.show {
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    transition: 0.5s;
+  }
+  .main--wrapper__sidebar-content {
+    width: 60%;
+    border-right: 1px solid #ccc;
+    height: 100%;
+    background-color: white;
+    overflow-y: auto;
+    z-index: 100;
+    transition: 0.5s;
+  }
+  .main--wrapper__sidebar.hide {
+    position: fixed;
+    z-index: 100;
+    left: -100%;
+    top: 0;
+    width: 50%;
+    transition: 0.5s;
+  }
+}

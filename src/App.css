@@ -1,0 +1,20 @@
+@import url("https://fonts.googleapis.com/css2?family=Jersey+15&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.wrapper * {
+  font-family: "Raleway", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.raleway {
+  font-family: "Raleway", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+.red-text {
+  color: #e91e63;
+}
+.red-bg {
+  background-color: #e91e63;
+}

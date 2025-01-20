@@ -1,0 +1,12 @@
+.main__content-filters--item {
+  padding: 3px 7px 3px 7px;
+  border: 1px solid #c0c0c0;
+  border-radius: 5px;
+  transition: 0.3s;
+  cursor: pointer;
+}
+.main__content-filters--item:hover {
+  transition: 0.3s;
+  background-color: #c0c0c0;
+  color: #fff;
+}

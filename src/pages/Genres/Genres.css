@@ -1,0 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Anton&display=swap");
+.genres__page--header-banner-title {
+  font-family: "Anton", serif;
+  letter-spacing: 10px;
+}
