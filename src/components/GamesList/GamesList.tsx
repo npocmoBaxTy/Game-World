@@ -66,7 +66,7 @@ const GamesList: React.FC<IProps> = ({ games }) => {
       >
         {/* Карточки игры */}
         {list.map((game) => (
-          <Card game={game} isGridColumns={isGridColumns} />
+          <Card key={game.name} game={game} isGridColumns={isGridColumns} />
         ))}
       </div>
     </section>

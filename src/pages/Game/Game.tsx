@@ -34,7 +34,7 @@ const Game: React.FC<IProps> = ({ games }) => {
               <div className="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800 font-normal text-base leading-4 text-gray-600">
                 <NavLink to={"/"}>Home</NavLink>
                 <span className="text-gray-500"> / </span>
-                <NavLink to={"/games"}>Games</NavLink>
+                <NavLink to={"/"}>Games</NavLink>
                 <span className="text-gray-500"> / </span>
                 <span className="underline">{id}</span>
               </div>
@@ -56,7 +56,7 @@ const Game: React.FC<IProps> = ({ games }) => {
                 </p>
               </div>
 
-              <p className=" font-normal text-base leading-6 text-gray-600 mt-7">
+              <p className=" font-normal text-justify text-base leading-6 text-gray-600 mt-7">
                 {game.description_raw}
                 <div className="tags">
                   {game.tags.length !== 0 &&

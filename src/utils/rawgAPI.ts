@@ -21,13 +21,17 @@ export const fetchGames = async (currentPage?: number) => {
 };
 
 // Запрос на получение игр определенного жанра
-export const fetchGamesByGenre = async (genre: string) => {
+export const fetchGamesByGenre = async (genre: string, page?: string) => {
   try {
-    const data = await axios.get(`${API_BASE_URL}/games?genre=${genre}`, {
-      params: {
-        key: API_KEY,
-      },
-    });
+    const data = await axios.get(
+      `${API_BASE_URL}/games?genres=${genre}&page_size=40&ordering=-released`,
+      {
+        params: {
+          key: API_KEY,
+          page: page || null,
+        },
+      }
+    );
     return data.data;
   } catch (error) {
     throw new Error(`Failed to fetch games by genre: ${genre}`);
