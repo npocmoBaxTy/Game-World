@@ -1,7 +1,5 @@
 import SimpleSlider from "../../shared/Slider/Slider";
 import { IGame } from "../../types/Game";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import { NavLink } from "react-router-dom";
 import "./Banner.css";
 
@@ -13,7 +11,10 @@ const Banner: React.FC<IProps> = ({ games }) => {
     <div className="main__page--slider flex justify-center relative w-full overflow-hidden sm:px-10">
       <SimpleSlider arrows={true}>
         {games.map((game) => (
-          <div className="mx-auto main__page--slider-item py-12 px-6 xl:px-12 flex justify-center items-center flex-col">
+          <div
+            className="mx-auto main__page--slider-item py-12 px-6 xl:px-12 flex justify-center items-center flex-col"
+            key={game.id}
+          >
             <div className="flex justify-between bg-gray-50 dark:bg-gray-900 shrink items-stretch flex-row">
               <div className="flex items-center border bg-gray-800 dark:bg-white justify-center">
                 <p className="transform flex flex-shrink-0 -rotate-90 text-2xl font-semibold tracking-wide leading-normal text-white dark:text-gray-800">
@@ -35,7 +36,7 @@ const Banner: React.FC<IProps> = ({ games }) => {
                     Unleash your inner hero today!
                   </p>
                   <NavLink
-                    to={`/games/game-${game.id}`}
+                    to={`/games/game/${game.id}`}
                     className={
                       "hidden sm:inline-block red-bg px-3 py-2 mt-2 rounded text-white duration-300 hover:bg-pink-700"
                     }

@@ -8,7 +8,7 @@ interface ISlider {
 }
 const SimpleSlider: React.FC<ISlider> = ({
   children,
-  slides,
+  slides = 1,
   dots,
   arrows,
 }) => {
@@ -18,9 +18,47 @@ const SimpleSlider: React.FC<ISlider> = ({
     infinite: true,
     autoplaySpeed: 5000,
     speed: 1000,
-    slidesToShow: slides || 1,
+    slidesToShow: 1,
     slidesToScroll: 1,
+    initialSlide: 0,
     arrows: arrows || false,
+    responsive: [
+      {
+        breakpoint: 1920, // для экранов шириной 1920px и выше
+        settings: {
+          slidesToShow: 4, // показывать 4 слайда
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 1024, // для экранов шириной 1024px и выше
+        settings: {
+          slidesToShow: 3, // показывать 3 слайда
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 768, // для экранов шириной 768px и выше
+        settings: {
+          slidesToShow: 2, // показывать 2 слайда
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 600, // для экранов шириной 1920px и выше
+        settings: {
+          slidesToShow: 2, // показывать 2 слайда
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 480, // для экранов шириной 480px и выше
+        settings: {
+          slidesToShow: 1, // показывать 1 слайд
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
   return (
     <div className="slider-container w-full">

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { IGenre } from "../types/Genre";
 const API_BASE_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_RAWG_KEY;
 // Запрос на получение данных
@@ -76,6 +77,7 @@ export const fetchGenres = async () => {
     const response = await axios.get(`${API_BASE_URL}/genres`, {
       params: {
         key: API_KEY,
+        page_size: 100,
       },
     });
     return response.data;
@@ -103,6 +105,7 @@ export const fetchPlatforms = async () => {
     const response = await axios.get(`${API_BASE_URL}/platforms`, {
       params: {
         key: API_KEY,
+        page_size: 100,
       },
     });
     return response.data;
@@ -117,6 +120,7 @@ export const fetchStores = async () => {
     const response = await axios.get(`${API_BASE_URL}/stores`, {
       params: {
         key: API_KEY,
+        page_size: 100,
       },
     });
     return response.data;
@@ -131,6 +135,7 @@ export const fetchTags = async () => {
     const response = await axios.get(`${API_BASE_URL}/tags`, {
       params: {
         key: API_KEY,
+        page_size: 100,
       },
     });
     return response.data;
@@ -144,10 +149,31 @@ export const fetchPublishers = async () => {
     const res = await axios.get(`${API_BASE_URL}/publishers`, {
       params: {
         key: API_KEY,
+        page_size: 100,
       },
     });
     return res.data;
   } catch (err) {
     console.error("Failed to fetch publishers", err);
+  }
+};
+
+export const fetchGameSuggestions = async (genres?: IGenre[]) => {
+  const arr = genres?.map((item) => {
+    return item.name.toLowerCase();
+  });
+  try {
+    const res = await axios.get(`${API_BASE_URL}/games`, {
+      params: {
+        key: API_KEY,
+        genres: arr?.join(","),
+        page_size: 10,
+        ordering: "-rating",
+        dates: "2010-01-01,2025-01-01",
+      },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Failed to fetch game suggestions", err);
   }
 };

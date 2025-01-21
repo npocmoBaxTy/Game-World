@@ -1,3 +1,9 @@
+import {
+  Disclosure,
+  DisclosurePanel,
+  DisclosureButton,
+} from "@headlessui/react";
+import { FaAngleDown } from "react-icons/fa";
 import IPlatform from "../../types/Platform";
 import { NavLink } from "react-router-dom";
 interface IProps {
@@ -10,7 +16,7 @@ const PublisherSidebar: React.FC<IProps> = ({ publishers }) => {
         Publishers
       </h2>
       <ul className="sidebar--content__genres-list flex flex-col">
-        {publishers.map((publisher) => (
+        {publishers.slice(0, 8).map((publisher) => (
           <NavLink
             className={
               "sidebar--content__genres-list--link py-1 hover:text-[#e91e63]"
@@ -22,6 +28,29 @@ const PublisherSidebar: React.FC<IProps> = ({ publishers }) => {
             <span className="genre__games--count text-teal-400">{`(${publisher.games_count})`}</span>
           </NavLink>
         ))}
+        <Disclosure as="div" defaultOpen={false}>
+          <DisclosurePanel className=" text-black flex flex-col" transition>
+            {publishers.slice(8).map((publisher) => (
+              <NavLink
+                className={
+                  "sidebar--content__genres-list--link py-1 hover:text-[#e91e63]"
+                }
+                key={publisher.id}
+                to={`/genres/genre/${publisher.name}`}
+              >
+                {publisher.name}{" "}
+                <span className="genre__games--count text-teal-400">{`(${publisher.games_count})`}</span>
+              </NavLink>
+            ))}
+          </DisclosurePanel>
+          <DisclosureButton
+            onClick={(e) => e.stopPropagation()}
+            className="group flex w-full items-center mt-1 red-text"
+          >
+            <span className=" font-medium">More publishers</span>
+            <FaAngleDown className="ml-1" />
+          </DisclosureButton>
+        </Disclosure>
       </ul>
     </div>
   );

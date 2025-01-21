@@ -7,15 +7,16 @@ import { useEffect } from "react";
 interface IProps {
   game: IGame;
   isGridColumns: boolean;
+  classname?: string;
 }
-const Card: React.FC<IProps> = ({ game, isGridColumns }) => {
+const Card: React.FC<IProps> = ({ game, isGridColumns, classname }) => {
   useEffect(() => {}, [game]);
   return (
     <div
       key={game.id}
       className={`game-card p-2 overflow-hidden mb-3 ${
         isGridColumns ? "w-[50%] max-[768px]:w-[49%]" : "w-full"
-      }  text-sm sm:text-lg duration-300 hover:scale-105`}
+      }  text-sm sm:text-lg duration-300 hover:scale-105 ${classname}`}
     >
       <div className="game-card__header">
         <Platforms platforms={game.platforms} />

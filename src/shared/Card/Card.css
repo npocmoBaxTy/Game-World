@@ -2,4 +2,7 @@
   .game-card {
     width: 24%;
   }
+  .game-card.similar {
+    width: 100%;
+  }
 }

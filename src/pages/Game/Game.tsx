@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
-import { fetchGameDetails } from "../../utils/rawgAPI";
+import { fetchGameDetails, fetchGameSuggestions } from "../../utils/rawgAPI";
 import { IGame } from "../../types/Game";
 import Platforms from "../../shared/Card/Platforms";
 import Loader from "../../shared/Loader/Loader";
 import { CiStar } from "react-icons/ci";
+import Similar from "../../components/Similar/Similar";
 
 interface IProps {
   games: IGame[];
@@ -15,14 +16,20 @@ const Game: React.FC<IProps> = ({ games }) => {
   // Находим игру по id
   const game2 = games.find((game) => game.id.toString() === id);
   const [game, setGame] = useState<IGame | null>(null);
+  const [suggestions, setSuggestions] = useState<IGame[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetchGameDetails(id || "0");
       setGame(data);
     };
     fetchData();
+
+    const fetchSuggestionsData = async () => {
+      const data = await fetchGameSuggestions(game?.genres);
+      setSuggestions(data.results);
+    };
+    fetchSuggestionsData();
   }, [id]);
-  console.log(game);
   // window.scroll(0, 0);
   return (
     <div className="game__details">
@@ -275,6 +282,7 @@ const Game: React.FC<IProps> = ({ games }) => {
               </div>
             </div>
           </div>
+          <Similar games={suggestions} />
         </div>
       ) : (
         <Loader />
