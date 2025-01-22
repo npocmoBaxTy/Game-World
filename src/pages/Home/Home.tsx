@@ -8,27 +8,42 @@ import Welcome from "../../components/Welcome/Welcome";
 import Banner from "../../components/Banner/Banner";
 import Pagination from "../../components/Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
+import { IGame } from "../../types/Game";
+import useSearchGames from "../../hooks/useSearchGames";
 
 const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  // Массив данных(игр)
-  const [games, setGames] = useState([]);
-  // Состояние загрузки игр
+  const [games, setGames] = useState<IGame[]>([]);
+  const [searchQuery, setSearchQuery] = useState(""); // Строка поиска
   const [loading, setLoading] = useState(true);
-  // Состояние сайдбара(на маленьких экранах)
-  const [show, setShow] = useState(false);
-  // Количество игр
+  const [show, setShow] = useState(false); // Стейт для сайдбара
   const [count, setCount] = useState(0);
-  // След. страница игр(для пагинации)
   const [next, setNext] = useState("");
-  // Пред. страница игр(для пагинации)
   const [previous, setPrevious] = useState("");
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const { handleSearchGame, searchedGames, nextPage, previousPage, total } =
+    useSearchGames();
+
   // Функция для управления сайдбаром
   const handleToggleSidebar = () => {
     setShow(!show);
   };
-  // Загрузка игровых данных
+
+  // Функция поиска
+  const handleSearch = async (value: string) => {
+    setSearchQuery(value);
+    try {
+      setLoading(true);
+      handleSearchGame(value);
+      nextPage && setNext(nextPage);
+      previousPage && setPrevious(previousPage);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // Функция для загрузки данных
   const fetchPageData = async (url: string, newPage: number) => {
     const element = document.getElementById("games-list");
     element?.scrollIntoView({
@@ -48,19 +63,22 @@ const Home = () => {
       setLoading(false);
     }
   };
-  // След страница пагинация
+
+  // Пагинация: следующая страница
   const handleNextPage = async () => {
     if (next) {
       await fetchPageData(next, currentPage + 1);
     }
   };
-  // Пред страница пагинация
+
+  // Пагинация: предыдущая страница
   const handlePrevPage = async () => {
     if (previous) {
       await fetchPageData(previous, currentPage - 1);
     }
   };
-  // Конкретная страница
+
+  // Пагинация: переход на конкретную страницу
   const handlePageChange = async (page: number) => {
     const element = document.getElementById("games-list");
     element?.scrollIntoView({
@@ -71,7 +89,7 @@ const Home = () => {
     setSearchParams({ page: String(page) });
     setGames(data.results);
   };
-  // Обновление состояния при изменении URL
+  // Загрузка данных при изменении URL
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,13 +106,19 @@ const Home = () => {
       }
     };
     fetchData();
-  }, []);
+    if (searchQuery.trim() === "") {
+      fetchData();
+    }
+  }, [currentPage]);
   return (
     <main className="main--wrapper w-full relative">
-      <Header toggleBurgerMenu={handleToggleSidebar} />
+      <Header
+        toggleBurgerMenu={handleToggleSidebar}
+        handleSearch={(e) => handleSearch(e.target.value)}
+      />
       <Welcome count={count} />
       {games ? <Banner games={games.slice(0, 5)} /> : <Loader />}
-      <section className="main--wrapper__content ">
+      <section className="main--wrapper__content">
         {loading ? (
           <Loader />
         ) : (
@@ -105,20 +129,23 @@ const Home = () => {
             <div className="main__side w-[20%] md:w-0 max-[768px]:w-0 xl:w-[20%]">
               <Sidebar open={show} handleClose={handleToggleSidebar} />
             </div>
-            <div className="content  md:w-full max-[768px]:w-full">
+            <div className="content md:w-full max-[768px]:w-full">
               <h1
                 id="games-list"
                 className="text-3xl ml-3 border-b w-[90%] mb-2 red-text pb-3"
               >
                 Games List
               </h1>
-              {games ? (
-                <GamesList className="main__games-content " games={games} />
-              ) : (
+              {loading ? (
                 <Loader />
+              ) : (
+                <GamesList
+                  className="main__games-content"
+                  games={searchedGames.length === 0 ? games : searchedGames}
+                />
               )}
               <Pagination
-                totalPages={250}
+                totalPages={total > 0 ? Math.ceil(total / 40) : 250}
                 next={next}
                 prev={previous}
                 currentPage={currentPage}

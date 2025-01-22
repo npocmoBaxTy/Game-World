@@ -1,4 +1,5 @@
 import Card from "../../shared/Card/Card";
+import Loader from "../../shared/Loader/Loader";
 import SimpleSlider from "../../shared/Slider/Slider";
 import { IGame } from "../../types/Game";
 
@@ -13,16 +14,20 @@ const Similar: React.FC<IProps> = ({ games }) => {
         Suggestions
       </h1>
       <div className="gape__page--similar--inner">
-        <SimpleSlider slides={4}>
-          {games.map((game) => (
-            <Card
-              key={game.id}
-              classname="w-full similar"
-              isGridColumns={false}
-              game={game}
-            />
-          ))}
-        </SimpleSlider>
+        {games.length !== 0 ? (
+          <SimpleSlider slides={4}>
+            {games.map((game) => (
+              <Card
+                key={game.id}
+                classname="w-full similar"
+                isGridColumns={false}
+                game={game}
+              />
+            ))}
+          </SimpleSlider>
+        ) : (
+          <Loader />
+        )}
       </div>
     </div>
   );

@@ -9,7 +9,7 @@ interface IProps {
 const Banner: React.FC<IProps> = ({ games }) => {
   return (
     <div className="main__page--slider flex justify-center relative w-full overflow-hidden sm:px-10">
-      <SimpleSlider arrows={true}>
+      <SimpleSlider arrows={true} slides={1}>
         {games.map((game) => (
           <div
             className="mx-auto main__page--slider-item py-12 px-6 xl:px-12 flex justify-center items-center flex-col"

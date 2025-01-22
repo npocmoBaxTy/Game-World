@@ -49,13 +49,19 @@ export const fetchGamesWithUrl = async (url: string) => {
 };
 // Запрос на поиск игры
 export const fetchSearchedGames = async (query: string) => {
-  const response = await fetch(
-    `${API_BASE_URL}/games?key=${API_KEY}&search=${query}&page_size=100&ordering=-released`
+  const response = await axios.get(
+    `${API_BASE_URL}/games?&page_size=100${
+      query
+        ? `&search=${query}`
+        : "&dates=2022-01-01,2025-12-31&ordering=-released"
+    }`,
+    {
+      params: {
+        key: API_KEY,
+      },
+    }
   );
-  if (!response.ok) {
-    throw new Error("Failed to fetch games");
-  }
-  return response.json();
+  return response.data;
 };
 // Запрос на конкретно одну игру
 export const fetchGameDetails = async (id: string) => {
@@ -158,22 +164,44 @@ export const fetchPublishers = async () => {
   }
 };
 
-export const fetchGameSuggestions = async (genres?: IGenre[]) => {
-  const arr = genres?.map((item) => {
-    return item.name.toLowerCase();
+export const fetchGameSuggestions = async (
+  genres?: IGenre[],
+  tags?: IGenre[]
+) => {
+  const tagsId = genres?.map((item) => {
+    return item.id.toString();
   });
+  const genresId = tags?.map((item) => item.id.toString());
   try {
     const res = await axios.get(`${API_BASE_URL}/games`, {
       params: {
         key: API_KEY,
-        genres: arr?.join(","),
-        page_size: 10,
-        ordering: "-rating",
-        dates: "2010-01-01,2025-01-01",
+        tags: tagsId?.join(","),
+        genres: genresId?.join(","),
+        page_size: 100,
       },
     });
     return res.data;
   } catch (err) {
     console.error("Failed to fetch game suggestions", err);
   }
+};
+
+export const fetchGameDLC = async (id: string) => {
+  const res = await axios.get(`${API_BASE_URL}/games/${id}/game-series`, {
+    params: {
+      key: API_KEY,
+    },
+  });
+  return res.data;
+};
+
+export const fetchParentGames = async (id: string) => {
+  const res = await axios.get(`${API_BASE_URL}/games/${id}/parent-games`, {
+    params: {
+      key: API_KEY,
+      page_size: 100,
+    },
+  });
+  return res.data;
 };

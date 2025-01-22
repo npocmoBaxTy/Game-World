@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { NavLink, useParams } from "react-router-dom";
-import { fetchGameDetails, fetchGameSuggestions } from "../../utils/rawgAPI";
+import {
+  fetchGameDetails,
+  fetchGameDLC,
+  fetchGameSuggestions,
+  fetchParentGames,
+} from "../../utils/rawgAPI";
 import { IGame } from "../../types/Game";
 import Platforms from "../../shared/Card/Platforms";
 import Loader from "../../shared/Loader/Loader";
 import { CiStar } from "react-icons/ci";
 import Similar from "../../components/Similar/Similar";
+import SimpleSlider from "../../shared/Slider/Slider";
+import Card from "../../shared/Card/Card";
+import SimpleDialogDemo from "../../shared/CustomModal/CustomModal";
 
 interface IProps {
   games: IGame[];
@@ -17,7 +25,9 @@ const Game: React.FC<IProps> = ({ games }) => {
   const game2 = games.find((game) => game.id.toString() === id);
   const [game, setGame] = useState<IGame | null>(null);
   const [suggestions, setSuggestions] = useState<IGame[]>([]);
+  const [gameAdditions, setGameAdditions] = useState<IGame[]>([]);
   useEffect(() => {
+    window.scroll(0, 0);
     const fetchData = async () => {
       const data = await fetchGameDetails(id || "0");
       setGame(data);
@@ -25,12 +35,37 @@ const Game: React.FC<IProps> = ({ games }) => {
     fetchData();
 
     const fetchSuggestionsData = async () => {
-      const data = await fetchGameSuggestions(game?.genres);
-      setSuggestions(data.results);
+      if (id) {
+        const data = await fetchGameSuggestions(game?.tags, game?.genres);
+        setSuggestions(data.results);
+      }
     };
     fetchSuggestionsData();
+
+    const fetchGameAdditions = async () => {
+      if (id) {
+        const data = await fetchGameDLC(id.toString());
+        setGameAdditions(data.results);
+      }
+    };
+    fetchGameAdditions();
+
+    const fetchParentGamesData = async () => {
+      if (id) {
+        const data = await fetchParentGames(id);
+        console.log(data);
+      }
+    };
+    fetchParentGamesData();
   }, [id]);
-  // window.scroll(0, 0);
+  const [show, setShow] = useState<boolean>(false);
+  const [img, setImg] = useState<string>("");
+  const handleClose = () => setShow(!show);
+  const handleShow = (imgSrc: string) => {
+    setShow(true);
+    setImg(imgSrc);
+  };
+
   return (
     <div className="game__details">
       {game ? (
@@ -137,11 +172,11 @@ const Game: React.FC<IProps> = ({ games }) => {
             </div>
 
             {/* <!-- Preview Images Div For larger Screen--> */}
-
-            <div className=" w-full sm:w-96 md:w-8/12  lg:w-6/12 flex lg:flex-row flex-col lg:gap-8 sm:gap-6 gap-4">
+            <div className="cursor-pointer w-full sm:w-96 md:w-8/12  lg:w-6/12 flex lg:flex-row flex-col lg:gap-8 sm:gap-6 gap-4">
               <div className=" w-full lg:w-8/12 bg-gray-100 flex justify-center items-center">
                 <img
                   src={game.background_image}
+                  onClick={() => handleShow(game.background_image)}
                   alt="game image"
                   className="h-full"
                 />
@@ -152,6 +187,7 @@ const Game: React.FC<IProps> = ({ games }) => {
                     <div className="bg-gray-100 flex justify-center items-center">
                       <img
                         src={img.image}
+                        onClick={() => handleShow(img.image)}
                         alt="Game - preview 1"
                         className="h-full w-full object-cover"
                       />
@@ -161,16 +197,47 @@ const Game: React.FC<IProps> = ({ games }) => {
               </div>
             </div>
           </div>
+          <div className="game__additions">
+            {gameAdditions.length !== 0 ? (
+              <>
+                <h2 className="font-semibold text-2xl mb-2 red-text mt-10">
+                  Game Additions
+                </h2>
+                <div className="game__additions--list">
+                  {gameAdditions.length >= 3 ? (
+                    <SimpleSlider>
+                      {gameAdditions.map((game) => (
+                        <Card
+                          isGridColumns={false}
+                          game={game}
+                          classname="similar"
+                        />
+                      ))}
+                    </SimpleSlider>
+                  ) : (
+                    <div className="game__additions--inner flex items-center flex-wrap">
+                      {gameAdditions.map((game) => (
+                        <Card isGridColumns={false} game={game} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : null}
+          </div>
           <div className="w-full mt-10">
-            <div className="game__details--about flex gap-3 sm:gap-36 items-stretch flex-wrap">
+            <div className="game__details--about flex gap-3 sm:gap-32 items-stretch flex-wrap sm:flex-nowrap">
               {/* Информация про рекомендации */}
               <div className="users__reccoments pb-2 border-b">
                 <h2 className="user__reccomends--title text-xl red-text mb-2">
-                  User Reccomendtaions
+                  User Reccomendations
                 </h2>
                 {game.ratings.map((rating) => {
                   return (
-                    <div className={`${rating.title} w-[300px] mb-3`}>
+                    <div
+                      className={`${rating.title} w-[300px] mb-3`}
+                      key={rating.id}
+                    >
                       <div className="title text-xs sm:text-[14px] w-full">
                         {rating.title.toLocaleUpperCase()}
                       </div>
@@ -283,6 +350,14 @@ const Game: React.FC<IProps> = ({ games }) => {
             </div>
           </div>
           <Similar games={suggestions} />
+          <SimpleDialogDemo handleClose={handleClose} open={show}>
+            <img
+              src={img}
+              onClick={handleClose}
+              className="object-contain h-full"
+              alt="game image"
+            />
+          </SimpleDialogDemo>
         </div>
       ) : (
         <Loader />

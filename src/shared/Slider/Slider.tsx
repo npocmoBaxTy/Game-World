@@ -8,7 +8,7 @@ interface ISlider {
 }
 const SimpleSlider: React.FC<ISlider> = ({
   children,
-  slides = 1,
+  slides,
   dots,
   arrows,
 }) => {
@@ -18,7 +18,7 @@ const SimpleSlider: React.FC<ISlider> = ({
     infinite: true,
     autoplaySpeed: 5000,
     speed: 1000,
-    slidesToShow: 1,
+    slidesToShow: slides || 4,
     slidesToScroll: 1,
     initialSlide: 0,
     arrows: arrows || false,
@@ -26,7 +26,7 @@ const SimpleSlider: React.FC<ISlider> = ({
       {
         breakpoint: 1920, // для экранов шириной 1920px и выше
         settings: {
-          slidesToShow: 4, // показывать 4 слайда
+          slidesToShow: slides || 4, // показывать 4 слайда
           slidesToScroll: 1,
         },
       },

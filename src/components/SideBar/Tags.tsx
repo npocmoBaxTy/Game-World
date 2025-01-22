@@ -9,7 +9,7 @@ import { FaAngleDown } from "react-icons/fa";
 
 const Tags: React.FC<{ tags: IPlatform[] }> = ({ tags }) => {
   return (
-    <div className="main__sidebar--tags mt-5 pl-3 text-sm">
+    <div className="main__sidebar--tags mt-5 pl-3">
       <h2 className="text-xl sm:text-2xl pb-3 border-b mb-1 duration-300 w-[90%] red-text">
         Tags
       </h2>
